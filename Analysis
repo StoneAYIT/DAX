@@ -23,3 +23,31 @@ RETURN
         PctChange <= -0.05, "declining",
         "stable"
     )
+
+////////////////////////////////////////////////////////////////////////
+
+Analysis - Overdue = 
+VAR FirstYear = MIN('tblDepartmentSnapshots'[Overdue])
+VAR LastYear = MAX('tblDepartmentSnapshots'[Overdue])
+
+VAR FirstValue = 
+    CALCULATE(
+        [Average Overdue],
+       'tblDepartmentSnapshots'[Overdue] = FirstYear
+    )
+    
+VAR LastValue = 
+    CALCULATE(
+        [Average Overdue],
+        'tblDepartmentSnapshots'[Overdue] = LastYear
+    )
+
+VAR PctChange = DIVIDE(LastValue - FirstValue, FirstValue, 0)
+
+RETURN
+    SWITCH(
+        TRUE(),
+        PctChange >= 0.05, "improving",
+        PctChange <= -0.05, "declining",
+        "stable"
+    )
